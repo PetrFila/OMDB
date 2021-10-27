@@ -8,6 +8,8 @@
     <body>
       {% block content %}
 
+      {% endblock %}
+
       {% if messages %}
         <div class="span12">
         {% for message in messages %}
@@ -18,6 +20,5 @@
         </div>
       {% endif %}
 
-      {% endblock %}
     </body>
 </html>
