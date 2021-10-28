@@ -3,7 +3,7 @@ from django.db import models
 
 class Title(models.Model):
     title_types = (
-        ('movies', 'Movies'),
+        ('movie', 'Movie'),
         ('series', 'Series')
     )
     # The first item in the (tuple) is the value and second is the label to be shown in the dropdown menu
