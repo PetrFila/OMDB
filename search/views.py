@@ -10,13 +10,13 @@ def search_form(request):
 
 
 def find_title(request):
-    if request.method == 'POST' and request.POST['title'] is not '':
+    if request.method == 'POST' and request.POST['title'] != '':
         titles = Title.objects.filter(title__contains=request.POST['title'])
         return render(request, 'display_results.html', {'titles': titles})
-    elif request.method == 'POST' and request.POST['type'] is not '':
+    elif request.method == 'POST' and request.POST['type'] != '':
         titles = Title.objects.filter(type__contains=request.POST['type'])
         return render(request, 'display_results.html', {'titles': titles})
-    elif request.method == 'POST' and request.POST['title'] is '' and request.POST['type'] is '':
+    elif request.method == 'POST' and request.POST['title'] == '' and request.POST['type'] == '':
         titles = Title.objects.order_by('title')
         return render(request, 'display_results.html', {'titles': titles})
     else:
@@ -26,5 +26,9 @@ def find_title(request):
 
 
 def title_detail(request, pk):
-    title = get_object_or_404(Title, pk=pk)
-    return render(request, 'title_details.html', {'title': title})
+    if Title.objects.filter(pk=pk).exists():
+        title = Title.objects.get(pk=pk)
+        return render(request, 'title_details.html', {'title': title})
+    else:
+        messages.error(request, 'Nah, sorry mate. There is no such title in the database.')
+        return redirect('/')
