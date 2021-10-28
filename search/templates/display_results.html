@@ -2,5 +2,10 @@
 
 {% block content %}
     <h2>This is what I found... </h2>
+    {% for t in titles %}
+       <a href="{% url 'title-detail' t.id %}">
+           <img src="{{ t.image_link }}" alt="{{ t.title }}" style="width:10%;height:10%;">
+       </a>
+    {% endfor %}
 {% endblock %}
 

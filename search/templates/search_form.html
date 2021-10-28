@@ -2,11 +2,10 @@
 
 {% block content %}
     <h2>Search a title</h2>
-    <form action="" method="POST" class="post-form">
+    <form action="{% url 'found-titles' %}" method="POST" class="post-form">
         {% csrf_token %}
         {{ form.as_p }}
 <!-- as_p displays each value from the form tuple on a new line. It basically meand each line is a HTML paragraph-->
-
         <button type="submit" class="search_button">Search</button>
     </form>
 {% endblock %}

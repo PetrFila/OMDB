@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h2>{{ title.title }}</h2>
+    <p><img src="{{ title.image_link }}" alt="{{ t.title }}" style="width:10%;height:10%;"></p>
+    <p>Type: {{ title.type }}</p>
+    <p>Year: {{ title.year }}</p>
+    <p>Genre: {{ title.genre }}</p>
+    <p>Director: {{ title.director }}</p>
+    <p>Actor: {{ title.actor }}</p>
+    <p>Story: {{ title.plot }}</p>
+    <p>IMDB: <a href="{{ title.IMDB_link }}"> {{ title.IMDB_link }} </a> </p>
+
+{% endblock %}
