@@ -23,3 +23,8 @@ def find_title(request):
         # Render the search form again and display some extra friendly error message
         messages.error(request, 'Sorry mate. No search request has been made.')
         return redirect('/')
+
+
+def title_detail(request, pk):
+    title = get_object_or_404(Title, pk=pk)
+    return render(request, 'title_details.html', {'title': title})

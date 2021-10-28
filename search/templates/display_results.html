@@ -3,7 +3,7 @@
 {% block content %}
     <h2>This is what I found... </h2>
     {% for t in titles %}
-        {{ t.title }} <br/>
+       <a href="{% url 'title-detail' t.id %}"> {{ t.title }} </a>  <br/>
     {% endfor %}
 {% endblock %}
 
