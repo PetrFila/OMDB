@@ -18,7 +18,7 @@ def find_title(request):
             return render(request, 'display_results.html', {'titles': titles})
         else:
             omdb_result = get_title_from_OMDB(request)
-            if type(omdb_result) == str:  # I know thi should have been handled better way but I'm, happy that it actually works
+            if type(omdb_result) == str:  # I know this should have been handled better way but I'm, happy that it actually works
                 messages.error(request, 'Sorry mate. ' + omdb_result)
                 return redirect('/')
             elif omdb_result['Response'] == 'False':

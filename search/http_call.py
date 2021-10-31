@@ -1,10 +1,11 @@
 import requests
+from .api_key import omdb
 
 
 def get_title_from_OMDB(request):
     try:
-        omdb_url = 'http://www.omdbapi.com/'
-        payload = {'apikey': '2f18a196',
+        omdb_url = omdb['url']
+        payload = {'apikey': omdb['api_key'],
                    't': request.POST['title'],
                    'type': request.POST['type'],
                    'plot': 'full'}
