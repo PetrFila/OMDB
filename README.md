@@ -36,6 +36,16 @@ The app has been made by using these Python and Django versions
 * Pipenv has been used to run the app
 
 #### Run the app
+Python 3 should be installed already.
+Check for the latest Python version by using
+python3 -V
+
+
+A program for running and managing Python environments should be also installed already.
+If not, I’d recommend installing *pipenv* 
+
+*brew install pipenv*
+
 * In terminal, navigate to the project folder
 * In there, run *pipenv install django*  - this will create the actual virtual environment and install django as a package from repository
 * Run  *pipenv shell*  - this will start the virtual environment
