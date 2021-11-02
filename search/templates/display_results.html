@@ -1,11 +1,24 @@
 {% extends 'base.html' %}
-
 {% block content %}
-    <h2>This is what I found... </h2>
+
+<h2>This is what I found... </h2>
+
+<p>Movies</p>
     {% for t in titles %}
-       <a href="{% url 'title-detail' t.id %}">
-           <img src="{{ t.image_link }}" alt="{{ t.title }}" style="width:10%;height:10%;">
-       </a>
+        {% if t.type == 'movie' %}
+            <a href="{% url 'title-detail' t.id %}">
+                <img src="{{ t.image_link }}" alt="{{ t.title }}" style="width:10%;height:10%;">
+            </a>
+        {% endif%}
+    {% endfor %}
+
+<p>TV Shows</p>
+    {% for t in titles %}
+        {% if t.type == 'series' %}
+            <a href="{% url 'title-detail' t.id %}">
+                <img src="{{ t.image_link }}" alt="{{ t.title }}" style="width:10%;height:10%;">
+            </a>
+        {% endif%}
     {% endfor %}
 {% endblock %}
 
