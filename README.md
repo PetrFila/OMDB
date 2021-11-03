@@ -29,27 +29,35 @@ Example:
 * Searching for the first Blade movie always returns those movies and doesn't search OMDB for the actual title.
 
 ### How to run the app locally
-The app has been made by using these Python and Django versions
-* Python 3.9.6
-* Django 3.2.8
-
+Install virtual environment:
 * Pipenv has been used to run the app
-
-#### Run the app
-Python 3 should be installed already.
-Check for the latest Python version by using
-python3 -V
-
-
-A program for running and managing Python environments should be also installed already.
-If not, I’d recommend installing *pipenv* 
-
+virtual environment runs *pipenv*, version 2021.5.29
 *brew install pipenv*
 
-* In terminal, navigate to the project folder
-* In there, run *pipenv install django*  - this will create the actual virtual environment and install django as a package from repository
+* In the terminal, navigate to the project folder.
 * Run  *pipenv shell*  - this will start the virtual environment
-* Install requests package *pip install requirements*
+
+These are the requirements to get the app up and running:
+
+> python==3.9.6 \
+> django==3.2.8 \
+> requests==2.26.0
+
+Commands:
+*pip install python==3.9.6*
+*pip install django==3.2.8*
+*pip install requests==2.26.0*
+
+Check in the packages whether the following ones are already included after installing Django.
+If not, they need to be added too.
+> asgiref==3.4.1 \
+> certifi 2021.10.8 \
+> charset-normalizer==2.0.7 \
+> idna==3.3 \
+> pytz==2021.3 \
+> sqlparse==0.4.2 \
+> urllib3==1.26.7
+
 * Run *python manage.py runserver* - this will start the actual application
 
 ### Testing
