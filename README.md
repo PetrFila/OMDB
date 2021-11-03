@@ -43,9 +43,9 @@ These are the requirements to get the app up and running:
 > django==3.2.8 \
 > requests==2.26.0
 
-Commands:
-*pip install python==3.9.6*
-*pip install django==3.2.8*
+Commands: \
+*pip install python==3.9.6* \
+*pip install django==3.2.8* \
 *pip install requests==2.26.0*
 
 Check in the packages whether the following ones are already included after installing Django.
