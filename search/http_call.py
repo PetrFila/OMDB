@@ -1,5 +1,15 @@
 import requests
-from .api_key import omdb
+try:
+    from .api_key import omdb
+except ImportError:
+    raise SystemExit("""
+An OMDB API Key is required to run this application. search/api_key.py should be created in with the template:
+
+omdb = {
+    'url': 'http://www.omdbapi.com/',
+    'api_key': '<API_KEY_KEYE>'
+}
+    """)
 
 
 def get_title_from_OMDB(request):
