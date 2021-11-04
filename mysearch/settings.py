@@ -24,9 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-b6pf1=m(moivh*ga@at$0z^#bwl2ad=afqyglhd-g0+w+lfzm9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', '.pythonanywhere.com']
+
 
 
 # Application definition
@@ -127,3 +128,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# I added these to stop the cookies conflicting with PV admin locally
+CSRF_COOKIE_NAME = 'petromdb'
+SESSION_COOKIE_NAME = 'petromdb'
