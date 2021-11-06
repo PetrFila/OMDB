@@ -29,34 +29,29 @@ Example:
 * Searching for the first Blade movie always returns those movies and doesn't search OMDB for the actual title.
 
 ### How to run the app locally
-Install virtual environment:
+* Clone the repository
+> https://github.com/PetrFila/OMDB.git 
+* Navigate to the project folder
+> cd omdb
+
+#### Installing virtual environment:
+You can skip this part if you already have one installed on your machine.
 * Pipenv has been used to run the app
 virtual environment runs *pipenv*, version 2021.5.29
-*brew install pipenv*
+> brew install pipenv
 
-* In the terminal, navigate to the project folder.
-* Run  *pipenv shell*  - this will start the virtual environment
+* Run either your virtual environment or 
+> pipenv shell
+- this will start the virtual environment
 
-These are the requirements to get the app up and running:
+#### Installing the requirements and running the app:
+* Install all the packages necessary to run the app
+> pip install -r requirements.txt
 
-> python==3.9.6 \
-> django==3.2.8 \
-> requests==2.26.0
+* Database is not included in this repository so please run the migration to create your own local one.
+* The project is based on the build in SQLite3 db.
+> python manage.py migrate
 
-Commands: \
-*pip install python==3.9.6* \
-*pip install django==3.2.8* \
-*pip install requests==2.26.0*
-
-Check in the packages whether the following ones are already included after installing Django.
-If not, they need to be added too.
-> asgiref==3.4.1 \
-> certifi 2021.10.8 \
-> charset-normalizer==2.0.7 \
-> idna==3.3 \
-> pytz==2021.3 \
-> sqlparse==0.4.2 \
-> urllib3==1.26.7
 
 * Run *python manage.py runserver* - this will start the actual application
 
