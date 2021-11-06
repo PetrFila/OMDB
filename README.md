@@ -52,8 +52,8 @@ virtual environment runs *pipenv*, version 2021.5.29
 * The project is based on the build in SQLite3 db.
 > python manage.py migrate
 
-
-* Run *python manage.py runserver* - this will start the actual application
+* Run the actual application
+> python manage.py runserver
 
 ### Testing
 Available endpoints

@@ -4,6 +4,7 @@
 *.pyc
 __pycache__
 search/api_key.py
+db.sqlite3
 
 # PyCharm #
 .idea/**/workspace.xml
