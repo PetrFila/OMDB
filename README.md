@@ -52,7 +52,15 @@ virtual environment runs *pipenv*, version 2021.5.29
 * The project is based on the build in SQLite3 db.
 > python manage.py migrate
 
-* Run the actual application
+#### Adding OMDB API key otherwise the app will not work
+* Create a new file *api_key.py* under the *search* folder and include there this JSON
+> omdb = {
+    'url': 'http://www.omdbapi.com/',
+    'api_key': 'your API key goes here'
+}
+* You need to have your own API key to make it work
+
+#### Running the actual application
 > python manage.py runserver
 
 ### Testing
@@ -77,7 +85,7 @@ Available endpoints
 | Action | Result |
 |--------|--------|
 |while still on the detail page, change the ID - use a non existing integer|this should redirect the user to the home page and display an error message|
-|while still on the detail page, change the ID - use a random string/character|this should a Not found 404 page|
+|while still on the detail page, change the ID - use a random string/character|this should display a Not found 404 page|
 |refresh the app so you are back on the home page. Add *result* to the URL|this should redirect the user back to the home page and display an error message|
 |use a wrong/misspelled title name - example *ong bag*|this should redirect the user back to the home page and display an error message|
 |disconnect from the internet and search for a title which is not in the local database to trigger the OMDB call|this should redirect the user back to the home page and display an error message|
