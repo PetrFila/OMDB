@@ -8,6 +8,7 @@ The application also uses the Open Movie Database API to look up the titles whic
 The original requirement is to include a search for an episode type as well. Playing around with the OMDB API, it didn't return any episode results and series type titles don't include any objects linking either to seasons or episodes.
 I believe, the episode search type is there to implement local database table dependency for episodes being linked to the series.
 However, this has not been implemented due to above-mentioned issue.
+ANother problem is that the OMDB API no longer provides multiple results and it now always returns a single exact matched title.
 
 ### How it works?
 Generally, the application first searches for the title in the local database.
@@ -29,36 +30,39 @@ Example:
 * Searching for the first Blade movie always returns those movies and doesn't search OMDB for the actual title.
 
 ### How to run the app locally
-Install virtual environment:
+* Clone the repository
+> https://github.com/PetrFila/OMDB.git 
+* Navigate to the project folder
+> cd omdb
+
+#### Installing virtual environment:
+You can skip this part if you already have one installed on your machine.
 * Pipenv has been used to run the app
 virtual environment runs *pipenv*, version 2021.5.29
-*brew install pipenv*
+> brew install pipenv
 
-* In the terminal, navigate to the project folder.
-* Run  *pipenv shell*  - this will start the virtual environment
+* Run either your virtual environment or 
+> pipenv shell
+- this will start the virtual environment
 
-These are the requirements to get the app up and running:
+#### Installing the requirements and running the app:
+* Install all the packages necessary to run the app
+> pip install -r requirements.txt
 
-> python==3.9.6 \
-> django==3.2.8 \
-> requests==2.26.0
+* Database is not included in this repository so please run the migration to create your own local one.
+* The project is based on the build in SQLite3 db.
+> python manage.py migrate
 
-Commands: \
-*pip install python==3.9.6* \
-*pip install django==3.2.8* \
-*pip install requests==2.26.0*
+#### Adding OMDB API key otherwise the app will not work
+* Create a new file *api_key.py* under the *search* folder and include there this JSON
+> omdb = {
+    'url': 'http://www.omdbapi.com/',
+    'api_key': 'your API key goes here'
+}
+* You need to have your own API key to make it work
 
-Check in the packages whether the following ones are already included after installing Django.
-If not, they need to be added too.
-> asgiref==3.4.1 \
-> certifi 2021.10.8 \
-> charset-normalizer==2.0.7 \
-> idna==3.3 \
-> pytz==2021.3 \
-> sqlparse==0.4.2 \
-> urllib3==1.26.7
-
-* Run *python manage.py runserver* - this will start the actual application
+#### Running the actual application
+> python manage.py runserver
 
 ### Testing
 Available endpoints
@@ -82,7 +86,7 @@ Available endpoints
 | Action | Result |
 |--------|--------|
 |while still on the detail page, change the ID - use a non existing integer|this should redirect the user to the home page and display an error message|
-|while still on the detail page, change the ID - use a random string/character|this should a Not found 404 page|
+|while still on the detail page, change the ID - use a random string/character|this should display a Not found 404 page|
 |refresh the app so you are back on the home page. Add *result* to the URL|this should redirect the user back to the home page and display an error message|
 |use a wrong/misspelled title name - example *ong bag*|this should redirect the user back to the home page and display an error message|
 |disconnect from the internet and search for a title which is not in the local database to trigger the OMDB call|this should redirect the user back to the home page and display an error message|

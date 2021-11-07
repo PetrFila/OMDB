@@ -4,6 +4,7 @@
 *.pyc
 __pycache__
 search/api_key.py
+db.sqlite3
 
 # PyCharm #
 .idea/**/workspace.xml
@@ -18,6 +19,12 @@ search/api_key.py
 .idea/**/uiDesigner.xml
 .idea/**/gradle.xml
 .idea/**/libraries
+'.idea/.gitignore'
+'.idea/OMDB.iml'
+'.idea/inspectionProfiles/profiles_settings.xml'
+'.idea/misc.xml'
+'.idea/modules.xml'
+'.idea/vcs.xml'
 *.iws /out/
 
 # Python #
