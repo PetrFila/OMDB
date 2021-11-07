@@ -19,6 +19,12 @@ db.sqlite3
 .idea/**/uiDesigner.xml
 .idea/**/gradle.xml
 .idea/**/libraries
+'.idea/.gitignore'
+'.idea/OMDB.iml'
+'.idea/inspectionProfiles/profiles_settings.xml'
+'.idea/misc.xml'
+'.idea/modules.xml'
+'.idea/vcs.xml'
 *.iws /out/
 
 # Python #

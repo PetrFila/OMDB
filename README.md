@@ -8,6 +8,7 @@ The application also uses the Open Movie Database API to look up the titles whic
 The original requirement is to include a search for an episode type as well. Playing around with the OMDB API, it didn't return any episode results and series type titles don't include any objects linking either to seasons or episodes.
 I believe, the episode search type is there to implement local database table dependency for episodes being linked to the series.
 However, this has not been implemented due to above-mentioned issue.
+ANother problem is that the OMDB API no longer provides multiple results and it now always returns a single exact matched title.
 
 ### How it works?
 Generally, the application first searches for the title in the local database.
