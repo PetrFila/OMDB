@@ -1,9 +1,9 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect
 from search.forms import SearchForm
 from django.contrib import messages
 from .models import Title
 from .http_call import get_title_from_OMDB
-from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, TemplateView
 
 
@@ -17,7 +17,9 @@ class SearchView(CreateView):
     #     return render(request, 'search_form.html', {'form': s_form})
 
 
-class ResultView(View):
+class ResultView(ListView):
+
+    template_name = 'display_results.html'
 
     def get(self, request, *args, **kwargs):
         # Render the search form again and display some extra friendly error message
@@ -25,17 +27,24 @@ class ResultView(View):
         return redirect('/')
 
     def post(self, request, *args, **kwargs):
-        titles_from_db = Title.objects.order_by('title')
-        return render(request, 'display_results.html', {'titles': titles_from_db})
-    # model = Title
-    # context_object_name = 'titles
-    # template_name = 'display_results.html'
-    # ordering = ['-title']
+        titles_from_db = Title.objects.all()
+        return render(request, self.template_name, {'titles': titles_from_db})
 
 
-class DetailView(DetailView):
-    model = Title
+class DetailTitleView(DetailView):
+
     template_name = 'title_details.html'
+
+    def get(self, request, pk, *args, **kwargs):
+        try:
+            title_details = Title.objects.get(pk=pk)
+            return render(request, self.template_name, {'title': title_details})
+        except ObjectDoesNotExist as er:
+            # redirect here
+            messages.error(request, er)
+            return redirect('/')
+
+
     # def title_detail(request, pk):
     #     if Title.objects.filter(pk=pk).exists():
     #         title = Title.objects.get(pk=pk)
