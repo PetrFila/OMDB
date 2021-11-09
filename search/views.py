@@ -12,30 +12,36 @@ class SearchView(CreateView):
     template_name = 'search_form.html'
     form_class = SearchForm
 
-    # def get(self, request):
-    #     s_form = SearchForm
-    #     return render(request, 'search_form.html', {'form': s_form})
-
 
 class ResultView(ListView):
-
     template_name = 'display_results.html'
 
     def get(self, request, *args, **kwargs):
         # Render the search form again and display some extra friendly error message
-        messages.error(request, 'Sorry mate. ' + request.method + ' method is not allowed.')
+        messages.error(request, 'Sorry. ' + request.method + ' method is not allowed.')
         return redirect('/')
 
     def post(self, request, *args, **kwargs):
-        titles_from_db = Title.objects.all()
-        return render(request, self.template_name, {'titles': titles_from_db})
+        omdb_result = get_title_from_OMDB(request)
+        if type(omdb_result) == str:  # I know this should have been handled better way but I'm, happy that it actually works.
+            messages.error(request, omdb_result)
+            return redirect('/')
+
+        # titles_from_db = Title.objects.all()
+        # return render(request, self.template_name, {'titles': titles_from_db})
 
 
 class DetailTitleView(DetailView):
-
     template_name = 'title_details.html'
+    '''
+    I'm not sure about adding the pk to the get method 
+    but I couldn't find other way to check for the title in DB an eventually return an error. 
+    Not using the get method works also fine but I couldn't find a way of handling the error for non existing title in DB
+    other than getting Django generic 404 error page which is something I don't want.
+    '''
 
     def get(self, request, pk, *args, **kwargs):
+        # Try to get the title from DB
         try:
             title_details = Title.objects.get(pk=pk)
             return render(request, self.template_name, {'title': title_details})
@@ -43,20 +49,6 @@ class DetailTitleView(DetailView):
             # redirect here
             messages.error(request, er)
             return redirect('/')
-
-
-    # def title_detail(request, pk):
-    #     if Title.objects.filter(pk=pk).exists():
-    #         title = Title.objects.get(pk=pk)
-    #         return render(request, 'title_details.html', {'title': title})
-    #     else:
-    #         messages.error(request, 'Nah, sorry mate. There is no such a title in the database.')
-    #         return redirect('/')
-
-
-# def search_form(request):
-#     s_form = SearchForm
-#     return render(request, 'search_form.html', {'form': s_form})
 
 
 def find_title(request):
@@ -91,13 +83,7 @@ def find_title(request):
     #     return redirect('/')
 
 
-# def title_detail(request, pk):
-#     if Title.objects.filter(pk=pk).exists():
-#         title = Title.objects.get(pk=pk)
-#         return render(request, 'title_details.html', {'title': title})
-#     else:
-#         messages.error(request, 'Nah, sorry mate. There is no such a title in the database.')
-#         return redirect('/')
+
 
 
 

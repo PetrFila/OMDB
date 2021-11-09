@@ -13,6 +13,16 @@ def get_title_from_OMDB(request):
         r.raise_for_status()
         if r.status_code == 200:
             return r.json()
+
+    except NameError as ne:
+        return str(ne).capitalize()
+
+    except ImportError as ie:
+        return str(ie).capitalize()
+
+    except FileNotFoundError as fe:
+        return str(fe).capitalize()
+    
     except requests.exceptions.HTTPError:
         return 'HTTP Error with the external API'
 
