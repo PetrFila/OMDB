@@ -3,21 +3,27 @@
 
 <h2>This is what I found... </h2>
 <a href="{% url 'search-form' %}">Home</a>
-<p>Movies</p>
-    {% for t in titles %}
-        {% if t.type == 'movie' %}
-            <a href="{% url 'title-detail' t.id %}">
-                <img src="{{ t.image_link }}" alt="{{ t.title }}" style="width:10%;height:10%;">
-            </a>
-        {% endif%}
-    {% endfor %}
 
-<p>TV Shows</p>
-    {% for t in titles %}
-        {% if t.type == 'series' %}
+{% if movies %}
+
+    <p>Movies</p>
+        {% for t in movies %}
             <a href="{% url 'title-detail' t.id %}">
                 <img src="{{ t.image_link }}" alt="{{ t.title }}" style="width:10%;height:10%;">
             </a>
-        {% endif%}
-    {% endfor %}
+        {% endfor %}
+    {% endif %}
+
+<!--Please don't judge me for this. I tried to use elif here but the Series part wasn't rendering-->
+    {% if series %}
+
+        <p>TV Shows</p>
+            {% for t in series %}
+                <a href="{% url 'title-detail' t.id %}">
+                    <img src="{{ t.image_link }}" alt="{{ t.title }}" style="width:10%;height:10%;">
+                </a>
+            {% endfor %}
+
+    {% endif %}
+
 {% endblock %}

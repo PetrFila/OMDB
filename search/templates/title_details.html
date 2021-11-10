@@ -2,7 +2,6 @@
 
 {% block content %}
     <a href="{% url 'search-form' %}">Home</a>
-    <a href="{% url 'found-titles' %}">Go Back</a>
     <h2>{{ title.title }}</h2>
     <p><img src="{{ title.image_link }}" alt="{{ t.title }}" style="width:10%;height:10%;"></p>
     <p>Type: {{ title.type }}</p>
