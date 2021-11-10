@@ -2,7 +2,7 @@
 {% block content %}
 
 <h2>This is what I found... </h2>
-
+<a href="{% url 'search-form' %}">Home</a>
 <p>Movies</p>
     {% for t in titles %}
         {% if t.type == 'movie' %}

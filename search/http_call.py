@@ -3,12 +3,17 @@ from .api_key import omdb
 
 
 def get_title_from_OMDB(request):
+
+    payload = {'apikey': omdb['api_key'],
+               't': request.GET['title'],
+               'type': request.GET['type'],
+               'plot': 'full'}
+
+    if request.GET['type'] == '':
+        payload.pop('type')
+
     try:
         omdb_url = omdb['url']
-        payload = {'apikey': omdb['api_key'],
-                   't': request.POST['title'],
-                   'type': request.POST['type'],
-                   'plot': 'full'}
         r = requests.get(omdb_url, params=payload, timeout=3)
         r.raise_for_status()
         if r.status_code == 200:
@@ -22,7 +27,7 @@ def get_title_from_OMDB(request):
 
     except FileNotFoundError as fe:
         return str(fe).capitalize()
-    
+
     except requests.exceptions.HTTPError:
         return 'HTTP Error with the external API'
 

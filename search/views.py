@@ -4,10 +4,10 @@ from search.forms import SearchForm
 from django.contrib import messages
 from .models import Title
 from .http_call import get_title_from_OMDB
-from django.views.generic import ListView, DetailView, CreateView, TemplateView
+from django.views.generic import ListView, DetailView, FormView
 
 
-class SearchView(CreateView):
+class SearchView(FormView):
     model = Title
     template_name = 'search_form.html'
     form_class = SearchForm
@@ -17,18 +17,34 @@ class ResultView(ListView):
     template_name = 'display_results.html'
 
     def get(self, request, *args, **kwargs):
-        # Render the search form again and display some extra friendly error message
-        messages.error(request, 'Sorry. ' + request.method + ' method is not allowed.')
-        return redirect('/')
+        if request.GET['type'] != '' and request.GET['title'] == '':
+            titles = Title.objects.filter(type__contains=request.GET['type'])
+            return render(request, self.template_name, {'titles': titles})
 
-    def post(self, request, *args, **kwargs):
-        omdb_result = get_title_from_OMDB(request)
-        if type(omdb_result) == str:  # I know this should have been handled better way but I'm, happy that it actually works.
-            messages.error(request, omdb_result)
-            return redirect('/')
+        elif request.GET['title'] == '' and request.GET['type'] == '':
+            titles = Title.objects.all()
+            return render(request, self.template_name, {'titles': titles})
 
-        # titles_from_db = Title.objects.all()
-        # return render(request, self.template_name, {'titles': titles_from_db})
+        else:
+            omdb_result = get_title_from_OMDB(request)
+
+            if type(omdb_result) == str:  # I know this should have been handled better way but I'm, happy that it actually works.
+                messages.error(request, omdb_result)
+                return redirect('/')
+
+            elif omdb_result['Response'] == 'False':
+                messages.error(request, omdb_result['Error'])
+                return redirect('/')
+
+            elif omdb_result['Response'] == 'True':
+                if Title.objects.filter(title__contains=request.GET['title']).exists():
+                    titles = Title.objects.filter(title__contains=request.GET['title'])
+                    return render(request, self.template_name, {'titles': titles})
+                else:
+                    add_new_title(omdb_result)
+                    titles = Title.objects.filter(title__contains=request.GET['title'])
+                    messages.success(request, 'Title found in the OMDB and has been added to the local database.')
+                    return render(request, self.template_name, {'titles': titles})
 
 
 class DetailTitleView(DetailView):
@@ -51,46 +67,7 @@ class DetailTitleView(DetailView):
             return redirect('/')
 
 
-def find_title(request):
-    if request.method == 'POST' and request.POST['title'] != '' and request.POST['type'] != '':
-        # if Title.objects.filter(title__contains=request.POST['title']).exists():
-        #     titles = Title.objects.filter(title__contains=request.POST['title'])
-        #     return render(request, 'display_results.html', {'titles': titles})
-        # else:
-        omdb_result = get_title_from_OMDB(request)
-        if type(omdb_result) == str:  # I know this should have been handled better way but I'm, happy that it actually works.
-            messages.error(request, 'Sorry mate. ' + omdb_result)
-            return redirect('/')
-        elif omdb_result['Response'] == 'True':
-            add_new_title(omdb_result)
-            messages.success(request, 'Title found in the OMDB and has been added to the local database.')
-            titles = Title.objects.filter(title__contains=request.POST['title'])
-            return render(request, 'display_results.html', {'titles': titles})
-        elif omdb_result['Response'] == 'False':
-            messages.error(request, 'Sorry mate. '+omdb_result['Error'])
-            return redirect('/')
-
-    elif request.method == 'POST' and request.POST['type'] != '':
-        titles = Title.objects.filter(type__contains=request.POST['type'])
-        return render(request, 'display_results.html', {'titles': titles})
-
-    # elif request.method == 'POST' and request.POST['title'] == '' and request.POST['type'] == '':
-    #     titles = Title.objects.order_by('title')
-    #     return render(request, 'display_results.html', {'titles': titles})
-    # else:
-    #     # Render the search form again and display some extra friendly error message
-    #     messages.error(request, 'Sorry mate. '+request.method+' method is not allowed.')
-    #     return redirect('/')
-
-
-
-
-
-
-
-
 def add_new_title(omdb_result):
-    print(omdb_result)
     add_to_db = Title(
         title=omdb_result['Title'],
         type=omdb_result['Type'],
@@ -100,7 +77,7 @@ def add_new_title(omdb_result):
         actor=omdb_result['Actors'],
         plot=omdb_result['Plot'],
         image_link=omdb_result['Poster'],
-        IMDB_link='https://www.imdb.com/title/'+omdb_result['imdbID']+'/'
+        IMDB_link='https://www.imdb.com/title/' + omdb_result['imdbID'] + '/'
     )
     add_to_db.save()
 
