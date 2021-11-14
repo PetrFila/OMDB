@@ -8,20 +8,24 @@ The application also uses the Open Movie Database API to look up the titles whic
 The original requirement is to include a search for an episode type as well. Playing around with the OMDB API, it didn't return any episode results and series type titles don't include any objects linking either to seasons or episodes.
 I believe, the episode search type is there to implement local database table dependency for episodes being linked to the series.
 However, this has not been implemented due to above-mentioned issue.
-ANother problem is that the OMDB API no longer provides multiple results and it now always returns a single exact matched title.
-
-### How it works?
-Generally, the application first searches for the title in the local database.
-If there are titles containing the searched key word, they will be displayed.
-If there are no such titles available, the application calls the OMDB API.
-If the title is available there, it gets stored to the local database and displayed on the screen.
+Another problem is that the OMDB API no longer provides multiple results, and it now always returns a single exact matched title.
 
 ### The search behaviour
 * Clicking on the Search button without any keyword or title type returns all titles in the local database.
-+ Searching with just a title name returns all titles from the local database containing the keyword.
-+ If no such titles exist, the app calls the OMDB API, stores the result locally and displays the result on the screen.
 * Search by title type returns all titles of the selected type.
 
++ Searching with just a title name - searches in the OMDB database first. 
++ If title doesn't exist there, it searches in local database.
+  + If title is in local database - display result
+  + else redirect to home page and display error
++ If title exists in the OMDB, the data is pulled and compared to local database.
+  + If the title is already available locally, the result is displayed and the data from OMDB is not stored.
+  + If title NOT already in local database, the data is stored and displayed
+
+* Search with title name and type - searches in the OMDB database first.
+  * if the  
+
+    
 ### Downside of this app
 * Combination of a title name and title type still returns all relevant titles based on the search word. The type doesn't play any role.
 * It's not possible to get additional titles from a franchise if similar titles already exist.
@@ -67,8 +71,8 @@ virtual environment runs *pipenv*, version 2021.5.29
 ### Testing
 Available endpoints
 * Home " / "
-* Preview of found titles " /result "
-* Title details page " /result/<title_id> "
+* Preview of found titles " /title "
+* Title details page " /title/<title_id> "
 
 #### The happy path
 | Action | Result |

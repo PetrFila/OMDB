@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from search.forms import SearchForm
 from django.contrib import messages
 from .models import Title
+from django.forms.models import model_to_dict
 from .http_call import get_title_from_OMDB
 from django.views.generic import ListView, DetailView, FormView
 
@@ -19,14 +20,12 @@ class ResultView(ListView):
     def get(self, request, *args, **kwargs):
 
         # Return titles by type
-        if request.GET['type'] != '' and request.GET['title'] == '' or request.PATH_INFO == '/title/':
-            titles = Title.objects.filter(type__contains=request.GET['type'])
-            movies = titles.filter(type='movie')
-            series = titles.filter(type='series')
-            return render(request, self.template_name, {'movies': movies, 'series': series})
+        if request.GET['type'] != '' and request.GET['title'] == '':
+            filtered_titles = filter_titles(request.GET['type'])
+            return render(request, self.template_name, {'movies': filtered_titles[0], 'series': filtered_titles[1]})
 
         # Return all titles
-        elif request.GET['title'] == '' and request.GET['type'] == '' or request.PATH_INFO == '/title/':
+        elif request.GET['title'] == '' and request.GET['type'] == '':
             titles = Title.objects.all()
             movies = titles.filter(type='movie')
             series = titles.filter(type='series')
@@ -41,26 +40,45 @@ class ResultView(ListView):
                 messages.error(request, omdb_result)
                 return redirect('/')
 
-            # Display error title not found if it doesn't exist on OMDB
+            # Display error if title not found in OMDB nor locally
             elif omdb_result['Response'] == 'False':
-                messages.error(request, omdb_result['Error'])
-                return redirect('/')
+                try:
+                    Title.objects.get(title__exact=request.GET['title'])
+                    filtered_titles = filter_titles(request.GET['title'])
+                    return render(request, self.template_name, {'movies': filtered_titles[0], 'series': filtered_titles[1]})
+                except ObjectDoesNotExist as er:
+                    messages.error(request, er)
+                    return redirect('/')
 
             # If the title already exists, don't save the OMDB result and display the local one
             # Else save the OMDB result and display it.
             elif omdb_result['Response'] == 'True':
-                if Title.objects.filter(title__contains=request.GET['title']).exists():
-                    titles = Title.objects.filter(title__contains=request.GET['title'])
-                    movies = titles.filter(type='movie')
-                    series = titles.filter(type='series')
-                    return render(request, self.template_name, {'movies': movies, 'series': series})
-                else:
-                    add_new_title(omdb_result)
-                    titles = Title.objects.filter(title__contains=request.GET['title'])
-                    movies = titles.filter(type='movie')
-                    series = titles.filter(type='series')
-                    messages.success(request, 'Title found in the OMDB and has been added to the local database.')
-                    return render(request, self.template_name, {'movies': movies, 'series': series})
+
+                try:
+                    exact_match = model_to_dict(Title.objects.get(title__exact=omdb_result['Title']))
+
+                    if exact_match['type'] == omdb_result['Type'] and exact_match['title'] == omdb_result['Title'] and omdb_result['Type'] == 'movie':
+                        filtered_titles = filter_titles(request.GET['title'])
+                        return render(request, self.template_name, {'movies': filtered_titles[0]})
+
+                    elif exact_match['type'] == omdb_result['Type'] and exact_match['title'] == omdb_result['Title'] and omdb_result['Type'] == 'series':
+                        filtered_titles = filter_titles(request.GET['title'])
+                        return render(request, self.template_name, {'series': filtered_titles[1]})
+
+                    else:
+                        add_new_title(omdb_result)
+                        filtered_titles = filter_titles(request.GET['type'])
+                        messages.success(request, 'Title found in the OMDB and has been added to the local database.')
+                        return render(request, self.template_name, {'movies': filtered_titles[0], 'series': filtered_titles[1]})
+
+                except ObjectDoesNotExist as er:
+                    messages.error(request, er)
+                    return redirect('/')
+
+                except Exception as e:
+                    print(e)
+                    messages.error(request, e)
+                    return redirect('/')
 
 
 class DetailTitleView(DetailView):
@@ -97,3 +115,15 @@ def add_new_title(omdb_result):
     )
     add_to_db.save()
 
+
+def filter_titles(filter_value):
+    if filter_value == 'movie' or filter_value == 'series':
+        titles = Title.objects.filter(type__contains=filter_value)
+        movies = titles.filter(type='movie')
+        series = titles.filter(type='series')
+        return movies, series
+    else:
+        titles = Title.objects.filter(title__contains=filter_value)
+        movies = titles.filter(type='movie')
+        series = titles.filter(type='series')
+        return movies, series
