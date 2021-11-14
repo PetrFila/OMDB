@@ -20,18 +20,12 @@ Another problem is that the OMDB API no longer provides multiple results, and it
   + else redirect to home page and display error
 + If title exists in the OMDB, the data is pulled and compared to local database.
   + If the title is already available locally, the result is displayed and the data from OMDB is not stored.
-  + If title NOT already in local database, the data is stored and displayed
+  + If title is NOT already in the local database, the data is stored and displayed
 
 * Search with title name and type - searches in the OMDB database first.
-  * if the  
-
-    
-### Downside of this app
-* Combination of a title name and title type still returns all relevant titles based on the search word. The type doesn't play any role.
-* It's not possible to get additional titles from a franchise if similar titles already exist.
-Example:
-* The local database already contains movies Blade II, Blade Runner and Blade Runner 2049.
-* Searching for the first Blade movie always returns those movies and doesn't search OMDB for the actual title.
+  * if the already exists, all titles containing the key word get displayed
+  * if the title is NOT already in the local database, the data is stored and displayed
+  
 
 ### How to run the app locally
 * Clone the repository
@@ -80,17 +74,18 @@ Available endpoints
 |click on Search|All locally stored titles should be displayed|
 |select a type and click on Search|Only the specific type of titles - (movies or series) - should be returned|
 |type a title name which is already in local database|all titles containing the search word should be returned|
-|type a title name and select a type|all titles containing the search word should be returned|
+|type a title name and select a type|all titles of that type containing the search word should be returned|
 |type a title name which is not in the local database|it should display the result incl. a message saying the title has been searched on OMDB and saved to our local database|
 |type a title name which is not in the local database, select a title type as well|it should display the result incl. a message saying the title has been searched on OMDB and saved to our local database|
 |click on the image on each result|the detail page should appear with the title details|
 |while on the detail page, change the ID - use another existing one|It should display the other title details|
+|each page contains Home button|clicking on it should take the user to the home - search page|
 
 #### The sad path - error handling
 | Action | Result |
 |--------|--------|
 |while still on the detail page, change the ID - use a non existing integer|this should redirect the user to the home page and display an error message|
 |while still on the detail page, change the ID - use a random string/character|this should display a Not found 404 page|
-|refresh the app so you are back on the home page. Add *result* to the URL|this should redirect the user back to the home page and display an error message|
+|refresh the app so you are back on the home page. Add *title* to the URL|this should redirect the user back to the home page and display an error message|
 |use a wrong/misspelled title name - example *ong bag*|this should redirect the user back to the home page and display an error message|
 |disconnect from the internet and search for a title which is not in the local database to trigger the OMDB call|this should redirect the user back to the home page and display an error message|
