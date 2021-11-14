@@ -18,3 +18,7 @@ class Title(models.Model):
     image_link = models.URLField(max_length=2000)
     IMDB_link = models.URLField(max_length=2000)
     # Leaving the field objects without any argument would automatically setup the length to 200 characters
+
+    class Meta:
+        ordering = ['title']
+        # this is a default ordering for this model

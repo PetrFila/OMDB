@@ -2,23 +2,53 @@
 {% block content %}
 
 <h2>This is what I found... </h2>
+<a href="{% url 'search-form' %}">Home</a>
 
-<p>Movies</p>
-    {% for t in titles %}
-        {% if t.type == 'movie' %}
+{% if movies %}
+
+    <p>Movies</p>
+        {% for t in movies %}
             <a href="{% url 'title-detail' t.id %}">
                 <img src="{{ t.image_link }}" alt="{{ t.title }}" style="width:10%;height:10%;">
             </a>
-        {% endif%}
-    {% endfor %}
+        {% endfor %}
 
-<p>TV Shows</p>
-    {% for t in titles %}
-        {% if t.type == 'series' %}
-            <a href="{% url 'title-detail' t.id %}">
-                <img src="{{ t.image_link }}" alt="{{ t.title }}" style="width:10%;height:10%;">
-            </a>
-        {% endif%}
+  {% if messages %}
+
+    <div class="span12">
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message|safe }}
+        </div>
     {% endfor %}
+    </div>
+
+  {% endif %}
+
+{% endif %}
+
+<!--Please don't judge me for this. I tried to use elif here but the Series part wasn't rendering-->
+    {% if series %}
+
+        <p>TV Shows</p>
+            {% for t in series %}
+                <a href="{% url 'title-detail' t.id %}">
+                    <img src="{{ t.image_link }}" alt="{{ t.title }}" style="width:10%;height:10%;">
+                </a>
+            {% endfor %}
+
+    {% endif %}
+
+    {% if messages %}
+
+       <div class="span12">
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message|safe }}
+            </div>
+          {% endfor %}
+       </div>
+
+    {% endif %}
+
 {% endblock %}
-
